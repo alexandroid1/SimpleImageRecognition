@@ -16,10 +16,33 @@ public class Main {
     public static void main(String[] args) throws IOException {
         verticalSort();
         findBrightnessBorders();
-
+        linesExtracted();
 
 
         return;
+    }
+
+    private static void linesExtracted() throws IOException {
+        File file = new File ("lines.png");
+        BufferedImage image = ImageIO.read(file);
+        WritableRaster raster = image.getRaster();
+
+        for (int i = 0; i < raster.getWidth(); i++) {
+            for (int j = 0; j < raster.getHeight(); j++) {
+
+                int[] pixel = raster.getPixel(i, j, new int[4]);
+                if ( pixel[0]+pixel[1]+pixel[2] < max-min/2 ) {
+                    pixel[0] = 255;
+                    pixel[1] = 0;
+                    pixel[2] = 0;
+
+                    raster.setPixel(i,j, pixel);
+                }
+            }
+        }
+
+        image.setData(raster);
+        ImageIO.write(image, "png", new File("linesExtracted.png"));
     }
 
     private static void findBrightnessBorders() throws IOException {
